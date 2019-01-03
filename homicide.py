@@ -35,6 +35,20 @@ def case_data(soup):
         return data
 
 def get_all_data(number_of_items):
+    """
+    Enter in a number for the top range of the iteration (i.e. >11020).
+    >>> get_all_data(10)
+        http://homicide.northwestern.edu/database/1
+        http://homicide.northwestern.edu/database/2
+        http://homicide.northwestern.edu/database/3
+        http://homicide.northwestern.edu/database/4
+        http://homicide.northwestern.edu/database/5
+        http://homicide.northwestern.edu/database/6
+        http://homicide.northwestern.edu/database/7
+        http://homicide.northwestern.edu/database/8
+        http://homicide.northwestern.edu/database/9
+        ...
+    """
     base_url = "http://homicide.northwestern.edu/database/"
     return [case_data(get_soup(base_url, str(item))) for item in range(1,number_of_items)]
 
