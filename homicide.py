@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas
 
 def get_soup(base_url, page):
     """
@@ -53,3 +54,9 @@ def get_all_data(number_of_items):
     return [case_data(get_soup(base_url, str(item))) for item in range(1,number_of_items)]
 
 # We used pandas to scrub the data and write to csv
+# Converting from a data dictionary to a pandas data frame
+
+def main(number_of_items, csv_file):
+    data = [d for d in get_all_data(number_of_items) if d]
+    df = pandas.DataFrame.from_dict(data)
+    df.to_csv(csv_file, index=False)
