@@ -2,18 +2,12 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 
-url = "http://homicide.northwestern.edu/database/1/"
-page = requests.get(url)
-soup = BeautifulSoup(page.text, 'html.parser')
-
 def get_soup(url, page):
     url = requests.compat.urljoin(url, str(page))
     page = requests.get(url)
     soup = BeautifulSoup(page.text, 'html.parser')
     print(url)
     return soup
-
-
 
 def case_data(soup):
     """
