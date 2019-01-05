@@ -60,3 +60,5 @@ def main(number_of_items, csv_file):
     data = [d for d in get_all_data(number_of_items) if d]
     df = pandas.DataFrame.from_dict(data)
     df.to_csv(csv_file, index=False)
+
+# Problem: the data dictionary cannot have duplicate keys, so the Victim's name, race, gender, and ethnicities were all overwritten by the defendants' information. I need to re-scrape the data for the victim's information and add to homicide.csv
