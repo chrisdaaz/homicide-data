@@ -58,3 +58,28 @@ def main(number_of_items, csv_file):
     # TODO: make a blank dataframe , for item in data make a dataframe, then merge it with the previous dataframe
     df = pandas.DataFrame.(data)
     df.to_csv(csv_file, index=False)
+
+"""
+from slack:
+
+I think I found it... https://stackoverflow.com/questions/44280227/zip-two-lists-in-dictionary-but-keep-duplicates-in-key
+Stack Overflow
+Zip two lists in dictionary but keep duplicates in key
+I have two lists: alist = ['key1','key2','key3','key3','key4','key4','key5'] blist= [30001,30002,30003,30003,30004,30004,30005] I want to merge these lists and add them to a dictionary. I try ...
+
+I wonder if pandas can cope with defaultdict
+```>>> from collections import defaultdict
+
+>>> my_dict = defaultdict(list)
+>>> for k, v in zip(alist, blist):
+...     my_dict[k].append(v)
+...
+>>> my_dict
+defaultdict(<type 'list'>, {'key3': [30003, 30003], 'key2': [30002], 'key1': [30001], 'key5': [30005], 'key4': [30004, 30004]})```
+(edited)
+The problem is i can't visualize how pandas will deal with the duplicates. Is there only a couple that are duped like "Name" ? maybe it's best to just deal with those two?
+I'm back to thinking about namespacing based on the headers
+
+david.schober [4:35 PM]
+Figured it out! We can just use a ‘find_previous(h2)@
+"""
