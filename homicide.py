@@ -29,10 +29,10 @@ def case_data(soup):
         keys = [x.text.strip() for x in soup.find_all('td', style="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;") if x.text]
         # Get the values
         values = [x.text.strip() for x in soup.find_all('td', style="width: 450px; text-align:left;") if x.text]
-        # Pair the keys with the values
-        data = dict(zip(keys, values))
+        # create a list of lists
+        data = list(zip(keys, values))
         # Add case description to the case data
-        data['case description'] = case_desc
+        data.append(('case description', case_desc))
         return data
 
 def get_all_data(number_of_items):
@@ -53,12 +53,8 @@ def get_all_data(number_of_items):
     base_url = "http://homicide.northwestern.edu/database/"
     return [case_data(get_soup(base_url, str(item))) for item in range(1,number_of_items)]
 
-# We used pandas to scrub the data and write to csv
-# Converting from a data dictionary to a pandas data frame
-
 def main(number_of_items, csv_file):
     data = [d for d in get_all_data(number_of_items) if d]
-    df = pandas.DataFrame.from_dict(data)
+    # TODO: make a blank dataframe , for item in data make a dataframe, then merge it with the previous dataframe
+    df = pandas.DataFrame.(data)
     df.to_csv(csv_file, index=False)
-
-# Problem: the data dictionary cannot have duplicate keys, so the Victim's name, race, gender, and ethnicities were all overwritten by the defendants' information. I need to re-scrape the data for the victim's information and add to homicide.csv
