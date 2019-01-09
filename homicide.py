@@ -42,6 +42,7 @@ def case_data(soup):
         data['case-description'] = case_desc
         return data
 
+
 def get_all_data(number_of_items):
     """
     Enter in a number for the top range of the iteration (i.e. >11020).
@@ -59,8 +60,33 @@ def get_all_data(number_of_items):
     """
     base_url = "http://homicide.northwestern.edu/database/"
     return [case_data(get_soup(base_url, str(item))) for item in range(1,number_of_items)]
+def write_md(data, directory):
+    import os
+    for item in data:
 
-def main(number_of_items, csv_file):
+        filename = "{}.md".format(item["case-description-case-number"])
+        with open(os.path.join(directory, filename), 'w') as f:
+            f.write("--- \n")
+            for key, value in item.items():
+                f.write("{}: '{}'\n".format(key, value))
+            f.write("\n---")
+
+
+
+def main(number_of_items, csv_file, output_dir_for_md):
+
+    """
+    This goes through a range of items in the homicide database and outputs markdown files with yaml frontmatter
+    as well as a csv data file
+
+    Takes three arguments:
+
+    number_of_items --> number of data pages you want to process from homicide
+    csv_file --> the output of the csv data file
+    output_dir_for_md --> the output directory for the .md files
+    """
     data = [d for d in get_all_data(number_of_items) if d]
+    write_md(data, output_dir_for_md)
     df = pandas.DataFrame.from_dict(data)
     df.to_csv(csv_file, index=False)
+    
