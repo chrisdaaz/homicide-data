@@ -31,15 +31,18 @@ def case_data(soup):
     if soup.find("h2"):
         case_desc = soup.find("h2").next_sibling.strip()
         # Get the values for keys, namespace them by the previous H2 so that we don't end up with two of the same fields
-        keys = [ "{} - {}".format(k.find_previous('h2').text.strip(), k.text.strip()) 
-                for k in soup.find_all('td', style="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;") 
+        # lowercase and sluggify the keys
+        key_search = "width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;" 
+        value_search = "width: 450px; text-align:left;"
+        keys = [ "{} {}".format(k.find_previous('h2').text.strip(), k.text.strip()).lower().replace(" ", "-").replace("'", "")
+                for k in soup.find_all('td', style= key_search) 
                 if k.text]
         # get the values
-        values = [v.text.strip() for v in soup.find_all('td', style="width: 450px; text-align:left;") if v.text]
+        values = [v.text.strip() for v in soup.find_all('td', style=value_search) if v.text]
         # create a list of Dictionaries 
         data = dict(zip(keys, values))
         # Add case description to the case data
-        data['Case Description'] = case_desc
+        data['case-description'] = case_desc
         return data
 
 def get_all_data(number_of_items):
