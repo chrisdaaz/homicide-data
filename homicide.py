@@ -62,8 +62,5 @@ def get_all_data(number_of_items):
 
 def main(number_of_items, csv_file):
     data = [d for d in get_all_data(number_of_items) if d]
-    # TODO: make a blank dataframe , for item in data make a dataframe, then merge it with the previous dataframe
     df = pandas.DataFrame.from_dict(data)
     df.to_csv(csv_file, index=False)
-
-
