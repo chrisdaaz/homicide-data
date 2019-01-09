@@ -22,16 +22,21 @@ def get_soup(base_url, page):
     return soup
 
 def case_data(soup):
+
+    """ takes soup and returns a dictionary. The dictionary is namespaced using 
+    a highly opinionated idea: if there's an key or value, look above and run
+    TODO: Add a doc test if necessary. 
+    """ 
     # Check to see if the page is an actual database record
     if soup.find("h2"):
         case_desc = soup.find("h2").next_sibling.strip()
-        # Get the keys
-        keys = [ "{} - {}".format(x.find_previous('h2').text.strip(), x.text.strip()) 
-                for x in soup.find_all('td', style="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;") 
-                if x.text]
         # Get the values for keys, namespace them by the previous H2 so that we don't end up with two of the same fields
-        values = [x.text.strip() for x in soup.find_all('td', style="width: 450px; text-align:left;") if x.text]
-        # create a list of lists
+        keys = [ "{} - {}".format(k.find_previous('h2').text.strip(), k.text.strip()) 
+                for k in soup.find_all('td', style="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;") 
+                if k.text]
+        # get the values
+        values = [v.text.strip() for v in soup.find_all('td', style="width: 450px; text-align:left;") if v.text]
+        # create a list of Dictionaries 
         data = dict(zip(keys, values))
         # Add case description to the case data
         data['Case Description'] = case_desc
