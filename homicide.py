@@ -70,8 +70,20 @@ def write_md(data, directory):
         with open(os.path.join(directory, filename), 'w') as f:
             f.write("--- \n")
             for key, value in item.items():
-                f.write('{}: "{}"\n'.format(key, value))
+                f.write("{}: {}\n".format(key, value))
             f.write("\n---")
+
+"""
+OR
+
+            for key, value in item.items():
+                f.write("{}: "{}"\n".format(key, value))
+            f.write("\n---")
+
+if the above doesn't work:
+    Ah. There's also something called Yaml pipe style that might do it:
+    key: | This is my "goofy" 'string'
+"""
 
 def main(number_of_items, csv_file, output_dir_for_md):
 
