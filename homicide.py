@@ -22,17 +22,24 @@ def get_soup(base_url, page):
     return soup
 
 def case_data(soup):
+
+    """ takes soup and returns a dictionary. The dictionary is namespaced using 
+    a highly opinionated idea: if there's an key or value, look above and run
+    TODO: Add a doc test if necessary. 
+    """ 
     # Check to see if the page is an actual database record
     if soup.find("h2"):
         case_desc = soup.find("h2").next_sibling.strip()
-        # Get the keys
-        keys = [x.text.strip() for x in soup.find_all('td', style="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;") if x.text]
-        # Get the values
-        values = [x.text.strip() for x in soup.find_all('td', style="width: 450px; text-align:left;") if x.text]
-        # create a list of lists
-        data = list(zip(keys, values))
+        # Get the values for keys, namespace them by the previous H2 so that we don't end up with two of the same fields
+        keys = [ "{} - {}".format(k.find_previous('h2').text.strip(), k.text.strip()) 
+                for k in soup.find_all('td', style="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;") 
+                if k.text]
+        # get the values
+        values = [v.text.strip() for v in soup.find_all('td', style="width: 450px; text-align:left;") if v.text]
+        # create a list of Dictionaries 
+        data = dict(zip(keys, values))
         # Add case description to the case data
-        data.append(('case description', case_desc))
+        data['Case Description'] = case_desc
         return data
 
 def get_all_data(number_of_items):
@@ -55,31 +62,5 @@ def get_all_data(number_of_items):
 
 def main(number_of_items, csv_file):
     data = [d for d in get_all_data(number_of_items) if d]
-    # TODO: make a blank dataframe , for item in data make a dataframe, then merge it with the previous dataframe
-    df = pandas.DataFrame(data)
+    df = pandas.DataFrame.from_dict(data)
     df.to_csv(csv_file, index=False)
-
-"""
-from slack:
-
-I think I found it... https://stackoverflow.com/questions/44280227/zip-two-lists-in-dictionary-but-keep-duplicates-in-key
-Stack Overflow
-Zip two lists in dictionary but keep duplicates in key
-I have two lists: alist = ['key1','key2','key3','key3','key4','key4','key5'] blist= [30001,30002,30003,30003,30004,30004,30005] I want to merge these lists and add them to a dictionary. I try ...
-
-I wonder if pandas can cope with defaultdict
-```>>> from collections import defaultdict
-
->>> my_dict = defaultdict(list)
->>> for k, v in zip(alist, blist):
-...     my_dict[k].append(v)
-...
->>> my_dict
-defaultdict(<type 'list'>, {'key3': [30003, 30003], 'key2': [30002], 'key1': [30001], 'key5': [30005], 'key4': [30004, 30004]})```
-(edited)
-The problem is i can't visualize how pandas will deal with the duplicates. Is there only a couple that are duped like "Name" ? maybe it's best to just deal with those two?
-I'm back to thinking about namespacing based on the headers
-
-david.schober [4:35 PM]
-Figured it out! We can just use a ‘find_previous(h2)@
-"""
