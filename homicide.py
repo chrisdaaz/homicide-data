@@ -39,7 +39,7 @@ def case_data(soup):
         # create a list of Dictionaries 
         data = dict(zip(keys, values))
         # Add case description to the case data
-        data['Case Description'] = case_desc
+        data['case-description'] = case_desc
         return data
 
 def get_all_data(number_of_items):
