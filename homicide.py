@@ -23,22 +23,22 @@ def get_soup(base_url, page):
 
 def case_data(soup):
 
-    """ takes soup and returns a dictionary. The dictionary is namespaced using 
+    """ takes soup and returns a dictionary. The dictionary is namespaced using
     a highly opinionated idea: if there's an key or value, look above and run
-    TODO: Add a doc test if necessary. 
-    """ 
+    TODO: Add a doc test if necessary.
+    """
     # Check to see if the page is an actual database record
-    key_search ="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;" 
+    key_search ="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;"
     value_search = "width: 450px; text-align:left;"
     if soup.find("h2"):
         case_desc = soup.find("h2").next_sibling.strip()
         # Get the values for keys, namespace them by the previous H2 so that we don't end up with two of the same fields
         keys = [ "{}-{}".format(k.find_previous('h2').text.strip(), k.text.strip()).lower().replace(" ", "-").replace("'", "")
-                for k in soup.find_all('td', style=key_search) 
+                for k in soup.find_all('td', style=key_search)
                 if k.text]
         # get the values
         values = [v.text.strip() for v in soup.find_all('td', style=value_search) if v.text]
-        # create a list of Dictionaries 
+        # create a list of Dictionaries
         data = dict(zip(keys, values))
         # Add case description to the case data
         data['case-description'] = case_desc
@@ -70,10 +70,8 @@ def write_md(data, directory):
         with open(os.path.join(directory, filename), 'w') as f:
             f.write("--- \n")
             for key, value in item.items():
-                f.write("{}: '{}'\n".format(key, value))
+                f.write('{}: "{}"\n'.format(key, value))
             f.write("\n---")
-
-
 
 def main(number_of_items, csv_file, output_dir_for_md):
 
@@ -91,4 +89,3 @@ def main(number_of_items, csv_file, output_dir_for_md):
     write_md(data, output_dir_for_md)
     df = pandas.DataFrame.from_dict(data)
     df.to_csv(csv_file, index=False)
-    
