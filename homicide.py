@@ -69,9 +69,10 @@ def write_md(data, directory):
         filename = "{}.md".format(item["case-description-case-number"])
         with open(os.path.join(directory, filename), 'w') as f:
             f.write("--- \n")
+            f.write("case_record: \n")
             for key, value in item.items():
-                f.write("{}: {}\n".format(key, value))
-            f.write("\n---")
+                f.write("   {}: {}\n".format(key, value))
+            f.write("---")
 
 """
 OR
