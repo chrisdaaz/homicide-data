@@ -33,7 +33,7 @@ def case_data(soup):
     if soup.find("h2"):
         case_desc = soup.find("h2").next_sibling.strip()
         # Get the values for keys, namespace them by the previous H2 so that we don't end up with two of the same fields
-        keys = [ "{}-{}".format(k.find_previous('h2').text.strip(), k.text.strip()).lower().replace(" ", "-").replace("'", "")
+        keys = ["{} {}".format(k.find_previous('h2').text.strip(), k.text.strip()).title().replace("'", "").replace(" ", "")
                 for k in soup.find_all('td', style=key_search)
                 if k.text]
         # get the values
@@ -41,7 +41,7 @@ def case_data(soup):
         # create a list of Dictionaries
         data = dict(zip(keys, values))
         # Add case description to the case data
-        data['case-description'] = case_desc
+        data['CaseDescription'] = case_desc
         return data
 
 
