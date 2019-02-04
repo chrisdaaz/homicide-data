@@ -23,9 +23,7 @@ def get_soup(base_url, page):
 
 def format_key(key):
     """this formats soup into a unique key"""
-    return  "{} {}".format(key.find_previous('h2').text.strip(), key.text.strip()).title().replace("'", "").replace(" ", "").replace("?", "")
-
-
+    return "{} {}".format(key.find_previous('h2').text.strip(), key.text.strip()).title().replace("'", "").replace(" ", "").replace("?", "")
 
 def case_data(soup):
 
@@ -87,6 +85,9 @@ def main(number_of_items, csv_file, output_dir_for_md):
     number_of_items --> number of data pages you want to process from homicide
     csv_file --> the output of the csv data file
     output_dir_for_md --> the output directory for the .md files
+
+    Example:
+    >>> homicide.main(50, "/mnt/c/Users/cpd3149/Desktop/output.csv", "/mnt/c/Users/cpd3149/Desktop/")
     """
     data = [d for d in get_all_data(number_of_items) if d]
     write_md(data, output_dir_for_md)
