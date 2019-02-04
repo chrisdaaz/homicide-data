@@ -21,6 +21,12 @@ def get_soup(base_url, page):
     print(url)
     return soup
 
+def format_key(key):
+    """this formats soup into a unique key"""
+    return  "{} {}".format(key.find_previous('h2').text.strip(), key.text.strip()).title().replace("'", "").replace(" ", "").replace("?", "")
+
+
+
 def case_data(soup):
 
     """
@@ -28,21 +34,19 @@ def case_data(soup):
     a highly opinionated idea: if there's a key or a value, look above and grab the heading and append it to the beginning of the key using titlecase (e.g. DefendantName).
     """
     key_search ="width: 200px; text-align:left; font-family: Arial Narrow,sans-serif; font-size: 12px;"
-    value_search = "width: 450px; text-align:left;"
     # Check to see if the page is an actual database record
     if soup.find("h2"):
         # If so, grab the case CaseDescription
         case_desc = soup.find("h2").next_sibling.strip()
         # Next, get the values for keys and namespace them to prevent duplicates
-        keys = ["{} {}".format(k.find_previous('h2').text.strip(), k.text.strip()).title().replace("'", "").replace(" ", "").replace("?", "") for k in soup.find_all('td', style=key_search) if k.text]
-        # get the values
-        values = [v.text.strip() for v in soup.find_all('td', style=value_search) if v.text]
+        keys_and_values = [(format_key(k), k.find_next('td').text.strip()) for k in soup.find_all('td', style=key_search) if k.text]
         # create a list of Dictionaries
-        data = dict(zip(keys, values))
+        data = dict(keys_and_values)
         # Add case description to the case data
         data['CaseDescription'] = case_desc
         return data
-
+    else:
+        return "Not a database record"
 
 def get_all_data(number_of_items):
     """
