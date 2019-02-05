@@ -43,7 +43,7 @@ def case_data(soup):
         # Add case description to the case data
         data['CaseDescription'] = case_desc
         return data
-    else:       
+    else:
         print("Not a database record")
 
 def get_all_data(number_of_items):
@@ -87,10 +87,7 @@ def main(number_of_items, csv_file, output_dir_for_md):
     output_dir_for_md --> the output directory for the .md files
 
     Example:
-    >>> homicide.main(200, "/home/nulibrec/homicide/homicide-20190205.csv", "/home/nulibrec/homicide/homicide-md/")
-
-    Or shh:
-    >>> /home/nulibrec/homicide
+    >>> homicide.main(11020, "/home/nulibrec/homicide/homicide-20190205.csv", "/home/nulibrec/homicide/homicide-md/")
     """
     data = [d for d in get_all_data(number_of_items) if d]
     write_md(data, output_dir_for_md)
