@@ -43,8 +43,8 @@ def case_data(soup):
         # Add case description to the case data
         data['CaseDescription'] = case_desc
         return data
-    else:
-        return "Not a database record"
+    else:       
+        print("Not a database record")
 
 def get_all_data(number_of_items):
     """
@@ -95,5 +95,6 @@ def main(number_of_items, csv_file, output_dir_for_md):
     data = [d for d in get_all_data(number_of_items) if d]
     write_md(data, output_dir_for_md)
     df = pandas.DataFrame.from_dict(data)
+    # Start the index at 1
     df.index = df.index + 1
     df.to_csv(csv_file, index=True, index_label="IndexId")
