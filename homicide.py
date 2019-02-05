@@ -87,9 +87,13 @@ def main(number_of_items, csv_file, output_dir_for_md):
     output_dir_for_md --> the output directory for the .md files
 
     Example:
-    >>> homicide.main(50, "/mnt/c/Users/cpd3149/Desktop/output.csv", "/mnt/c/Users/cpd3149/Desktop/")
+    >>> homicide.main(200, "/home/nulibrec/homicide/homicide-20190205.csv", "/home/nulibrec/homicide/homicide-md/")
+
+    Or shh:
+    >>> /home/nulibrec/homicide
     """
     data = [d for d in get_all_data(number_of_items) if d]
     write_md(data, output_dir_for_md)
     df = pandas.DataFrame.from_dict(data)
-    df.to_csv(csv_file, index=False)
+    df.index = df.index + 1
+    df.to_csv(csv_file, index=True, index_label="IndexId")
