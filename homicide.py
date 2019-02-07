@@ -23,7 +23,7 @@ def get_soup(base_url, page):
 
 def format_key(key):
     """this formats soup into a unique key"""
-    return "{} {}".format(key.find_previous('h2').text.strip(), key.text.strip()).title().replace("'", "").replace(" ", "").replace("?", "")
+    return "{} {}".format(key.find_previous('h2').text.strip(), key.text.strip()).title().replace("'", "").replace(" ", "").replace("?", "").replace(u"\ufffd", "'")
 
 def case_data(soup):
 
@@ -37,7 +37,7 @@ def case_data(soup):
         # If so, grab the case CaseDescription
         case_desc = soup.find("h2").next_sibling.strip()
         # Next, get the values for keys and namespace them to prevent duplicates
-        keys_and_values = [(format_key(k), k.find_next('td').text.strip()) for k in soup.find_all('td', style=key_search) if k.text]
+        keys_and_values = [(format_key(k), k.find_next('td').text.strip().replace(u"\ufffd", "'")) for k in soup.find_all('td', style=key_search) if k.text]
         # create a list of Dictionaries
         data = dict(keys_and_values)
         # Add case description to the case data
@@ -87,7 +87,7 @@ def main(number_of_items, csv_file, output_dir_for_md):
     output_dir_for_md --> the output directory for the .md files
 
     Example:
-    >>> homicide.main(11020, "/home/nulibrec/homicide/homicide-20190205.csv", "/home/nulibrec/homicide/homicide-md/")
+    >>> homicide.main(11020, "/home/nulibrec/homicide/homicide-20190207.csv", "/home/nulibrec/homicide/homicide-md/")
     """
     data = [d for d in get_all_data(number_of_items) if d]
     write_md(data, output_dir_for_md)
